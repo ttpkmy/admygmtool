@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<!-- 强制 IE 以最新模式渲染（兼容内嵌 WebBrowser 控件） -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>更新日志</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Microsoft YaHei", "微软雅黑", Tahoma, Arial, sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .container { padding: 16px 20px; }
+  h1 {
+    font-size: 18px;
+    color: #2c3e50;
+    border-bottom: 2px solid #4a90e2;
+    padding-bottom: 8px;
+    margin: 0 0 16px;
+  }
+  .log {
+    margin: 0 0 12px;
+    padding: 8px 10px 8px 14px;
+    background: #ffffff;
+    border: 1px solid #e3e9f0;
+    border-left: 4px solid #4a90e2;
+    border-radius: 4px;
+  }
+  .log .date {
+    display: inline-block;
+    font-weight: bold;
+    color: #4a90e2;
+    margin-right: 8px;
+    min-width: 96px;
+  }
+  .log .txt { color: #34495e; }
+  .footer {
+    margin-top: 18px;
+    padding: 10px 12px;
+    background: #eaf2fb;
+    border-radius: 6px;
+    color: #5a6b7b;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>更新日志</h1>
+    <div id="list"></div>
+    <div class="footer">如果在使用工具当中有任何问题或建议，请联系作者进行修改，谢谢支持</div>
+  </div>
+
+<script>
+  /* =========================================================
+     维护说明：以后要加新日志，只需在下面 LOGS 数组末尾
+     追加一行  { d:'日期', t:'内容' }  即可，页面自动渲染，
+     不用改其它代码。数组顺序即显示顺序（新日志加在末尾 = 显示在最后）。
+     ========================================================= */
+  var LOGS = [
+    { d: '2011年5月5日',  t: '更新商店修改后进游戏精品栏无法看到介绍' },
+    { d: '2011年5月5日',  t: '增加官方吸血鬼职业选项' },
+    { d: '2011年5月12日', t: '增加刷星功能' },
+    { d: '2011年5月21日', t: '增加Monster.dat,添加，删除，保存，修改等功能' },
+    { d: '2011年5月22日', t: '更新刷装备，经测试没问题' },
+    { d: '2011年5月23日', t: '更新合区功能' },
+    { d: '2011年6月13日', t: '更新清理XX级以下数据无法清理问题，经测试没问题' },
+    { d: '2011年6月15日', t: '更新合区无法合并问题，已解决' },
+    { d: '2011年6月22日', t: '更新账号充值魔石卡' },
+    { d: '2011年7月7日',  t: '更新物品价格“脚本ID”无法修改BUG' },
+    { d: '2011年7月9日',  t: '更新商店物品“上移”“下移”' },
+    { d: '2011年7月9日',  t: '更“多区设置”一区架区功能针对3709端' },
+    { d: '2011年7月10日', t: '修正自动架区错误架设问题,测试通过' },
+    { d: '2011年7月11日', t: '更新“角色清理”无角色清理功能' },
+    { d: '2011年7月13日', t: '更新“统计清理”按等级清理，部分数据无法清理BUG' },
+    { d: '2011年7月13日', t: '更新“刷怪设置”添加功能.修改无法删除数据功能' },
+    { d: '2011年7月13日', t: '增加“多区设置”团战设置功能' },
+    { d: '2011年7月13日', t: '增加“公告设置”新公告和旧公告修改功能' },
+    { d: '2011年7月14日', t: '修改“幻兽刷星”部分数据库无法刷BB星数问题' },
+    { d: '2011年7月16日', t: '修改“装备管理”装备修改后无法看到BUG。添加套装功能' },
+    { d: '2011年7月18日', t: '更新“抽奖设置”添加,修改功能' },
+    { d: '2011年7月18日', t: '更新“刷怪设置”修改功能' },
+    { d: '2011年7月22日', t: '增加“角色物品转移”测试通过' },
+    { d: '2011年7月23日', t: '增加“NPC脚本”脚本跟踪功能.经测试无误' },
+    { d: '2011年7月23日', t: '修改“物品价格”物品名字无法修改BUG' },
+    { d: '2011年7月24日', t: '修正“装备管理”2.11版装备无法查到BUG' },
+    { d: '2011年7月25日', t: '添加“物品价格”导出数据，导入数据，批量添加到itemtype数据' },
+    { d: '2011年7月26日', t: '修改“商店物品”物品名称修改后出错BUG,经测试无误,统计清理数据城堡无法清理,已修改' },
+    { d: '2011年7月29日', t: '修改“商店物品”非VIP商店添加出错问题，已修复' },
+    { d: '2011年8月2日',  t: '添加“添加新宝宝”' },
+    { d: '2011年8月4日',  t: '修改“添加新宝宝”添加宝宝看不到问题，以修复' },
+    { d: '2011年7月27日', t: '添加“物品价格”添加导入物品到itemtype.dat文件,可以直接同步到数据库里,未授权版本无法添加到数据库,此功能大大提升添加装备简介化一键OK' },
+    { d: '2011年8月4日',  t: '添加“NPC脚本跟踪”添加数据.删除数据功能' },
+    { d: '2012年1月4日',  t: '添加“吸血鬼”添加数据.删除数据功能' },
+    { d: '2012年2月4日',  t: '添加“金枪手”添加数据.删除数据功能' },
+    { d: '2026年9月7日', t: '维护说明待更新' }
+  ];
+
+  (function () {
+    var list = document.getElementById('list');
+    for (var i = 0; i < LOGS.length; i++) {
+      var item = LOGS[i];
+      var div = document.createElement('div');
+      div.className = 'log';
+      if (item.d) {
+        var d = document.createElement('span');
+        d.className = 'date';
+        d.textContent = item.d;
+        div.appendChild(d);
+      }
+      var t = document.createElement('span');
+      t.className = 'txt';
+      t.textContent = item.t;
+      div.appendChild(t);
+      list.appendChild(div);
+    }
+  })();
+</script>
+</body>
+</html>
