@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<!-- 强制 IE 以最新模式渲染（兼容内嵌 WebBrowser 控件） -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>功能导航</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Microsoft YaHei", "微软雅黑", Tahoma, Arial, sans-serif;
+    background: #eef1f6;
+    color: #1f2d3d;
+  }
+  .nav {
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    overflow: auto;     /* 框太小也能滚动查看，不裁切 */
+  }
+  .grid {
+    font-size: 0;       /* 抵消 inline-block 之间的换行空白 */
+    text-align: center;
+  }
+  .card {
+    display: inline-block;
+    width: 31%;
+    margin: 1%;
+    vertical-align: top;
+    min-height: 96px;
+    text-decoration: none;
+    color: #1f2d3d;
+    background: #ffffff;
+    border: 1px solid #d8dee9;
+    border-radius: 8px;
+    padding: 16px 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    cursor: pointer;
+    -webkit-transition: all .15s ease;
+    transition: all .15s ease;
+  }
+  .card:hover {
+    border-color: #4a90e2;
+    box-shadow: 0 4px 12px rgba(74,144,226,0.25);
+    -webkit-transform: translateY(-2px);
+    transform: translateY(-2px);
+  }
+  .card .ico {
+    display: inline-block;
+    width: 38px; height: 38px; line-height: 38px;
+    border-radius: 50%;
+    background: #4a90e2;
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .card .t {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .card .d {
+    display: block;
+    font-size: 12px;
+    color: #8a96a3;
+  }
+  .card .go {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #4a90e2;
+  }
+  /* 窄屏（手机/极小内嵌框）自动变单列，保证不溢出 */
+  @media (max-width: 520px) {
+    .card { width: 96%; }
+  }
+
+  /* 矮视口（如工具顶部 60px 高的内嵌框）：压缩成纯文字 2×3 小格，
+     6 个标题一次全显示；内边距/间距压到正好塞进 60px，不出现滚动条
+     （overflow:auto 仍保留，将来加第 3 行会自动出现滚动条） */
+  @media (max-height: 220px) {
+    .nav { padding: 3px; }
+    .card {
+      width: 31%;
+      margin: 1px 1%;
+      min-height: 0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      box-shadow: none;
+    }
+    .card .ico, .card .d, .card .go { display: none; }
+    .card .t {
+      font-size: 12px;
+      font-weight: bold;
+      margin: 0;
+      line-height: 1.3;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="nav">
+    <div class="grid" id="grid"></div>
+  </div>
+
+<script>
+  /* =========================================================
+     配置区：把下面 6 项改成你的真实标题 / 链接 / 说明即可。
+       title : 卡片标题（即你要显示的 6 个标题之一）
+       url   : 点击后打开的页面地址（可填站内相对路径或外链）
+       desc  : 标题下方的灰色小字说明（可留空 ""）
+       ico   : 圆圈里的序号/图标文字（可改成任意字，如 "★"）
+       color : 标题文字颜色（CSS 颜色值，如 "#e74c3c"；每个标题填一个不同颜色）
+     布局固定为 2 行 × 3 列；改这里就行，不用动下面的代码。
+     ========================================================= */
+  var CARDS = [
+    { title: '标题一', url: '#', desc: '点击进入', ico: '1', color: '#e74c3c' },
+    { title: '标题二', url: '#', desc: '点击进入', ico: '2', color: '#e67e22' },
+    { title: '标题三', url: '#', desc: '点击进入', ico: '3', color: '#f39c12' },
+    { title: '标题四', url: '#', desc: '点击进入', ico: '4', color: '#16a085' },
+    { title: '标题五', url: '#', desc: '点击进入', ico: '5', color: '#2980b9' },
+    { title: '标题六', url: '#', desc: '点击进入', ico: '6', color: '#8e44ad' }
+  ];
+  /* ========================================================= */
+
+  (function () {
+    var grid = document.getElementById('grid');
+    for (var i = 0; i < CARDS.length; i++) {
+      var c = CARDS[i];
+      var a = document.createElement('a');
+      a.className = 'card';
+      a.href = c.url;
+      a.target = '_blank';          // 打开进入新页面（新标签页/新窗口）
+      a.rel = 'noopener';
+
+      var ico = document.createElement('span');
+      ico.className = 'ico';
+      ico.textContent = c.ico;
+
+      var t = document.createElement('span');
+      t.className = 't';
+      t.textContent = c.title;
+      t.style.color = c.color;          // 每个标题一个颜色
+
+      var d = document.createElement('span');
+      d.className = 'd';
+      d.textContent = c.desc;
+
+      var go = document.createElement('span');
+      go.className = 'go';
+      go.textContent = '进入 →';
+
+      a.appendChild(ico);
+      a.appendChild(t);
+      a.appendChild(d);
+      a.appendChild(go);
+      grid.appendChild(a);
+    }
+  })();
+</script>
+</body>
+</html>
