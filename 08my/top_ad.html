@@ -125,6 +125,9 @@
   ];
   /* ========================================================= */
 
+  /* 禁止鼠标右键菜单 */
+  document.oncontextmenu = function () { return false; };
+
   (function () {
     var grid = document.getElementById('grid');
     for (var i = 0; i < CARDS.length; i++) {
